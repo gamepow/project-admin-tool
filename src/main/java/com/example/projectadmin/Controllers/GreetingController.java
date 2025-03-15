@@ -11,7 +11,7 @@ import com.example.projectadmin.classes.Greeting;
 @RestController
 public class GreetingController {
 
-	private static final String template = "Hello, %s!";
+	private static final String template = "Hello user: %s!";
 	private final AtomicLong counter = new AtomicLong();
 
 	@GetMapping("/greeting")
