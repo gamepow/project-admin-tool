@@ -1,4 +1,4 @@
-package com.example.projectadmin.Controllers;
+package com.example.projectadmin.controllers;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.projectadmin.Classes.Greeting;
+import com.example.projectadmin.entities.Greeting;
 
 @RestController
 public class GreetingController {
