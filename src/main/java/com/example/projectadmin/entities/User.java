@@ -10,43 +10,42 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
     
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "UserID")
-    private int userId;
+    private int id;
     
-    @Column(name = "Username", unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "Password", nullable = false) 
+    @Column(name = "password", nullable = false) 
     private String password;
 
-    @Column(name = "Email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "CreatedAt",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp createdAt;
+    @Column(name = "create_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createDate;
 
-    @Column(name = "UpdatedAt",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp updatedAt;
+    @Column(name = "update_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp updateDate;
 
 
     public User() {
     }
 
     public User(int id) {
-        this.userId = id;
+        this.id = id;
     }
 
     public int getUserId() {
-        return userId;
+        return id;
     }
 
     public void setUserId(int id) {
-        this.userId = id;
+        this.id = id;
     }
 
     public String getUsername() {
@@ -73,20 +72,20 @@ public class User {
         this.email = email;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
+    public Timestamp getCreateDate() {
+        return createDate;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
+    public void setCreateDate(Timestamp createdAt) {
+        this.createDate = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
+    public Timestamp getUpdateDate() {
+        return updateDate;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setUpdateDate(Timestamp updatedAt) {
+        this.updateDate = updatedAt;
     }
 
     

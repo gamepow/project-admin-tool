@@ -10,22 +10,25 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "UserProfiles")
+@Table(name = "userProfile")
 public class UserProfile {
     
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "ProfileID")
+    @Column(name = "profile_id")
     private int id;
     
-    @Column(name = "FirstName")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "LastName")
+    @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "default_currency")
+    private String defaultCurrency;
+
     @ManyToOne
-    @JoinColumn(name = "UserID", referencedColumnName= "UserID")
+    @JoinColumn(name = "user_id", referencedColumnName= "id")
     private User usuario;
 
     public UserProfile(){
@@ -62,6 +65,14 @@ public class UserProfile {
 
     public void setUsuario(User usuario){
         this.usuario = usuario;
+    }
+
+    public String getDefaultCurrency() {
+        return defaultCurrency;
+    }
+
+    public void setDefaultCurrency(String defaultCurrency) {
+        this.defaultCurrency = defaultCurrency;
     }
 
 }

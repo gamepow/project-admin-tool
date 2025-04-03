@@ -44,8 +44,10 @@ public class AuthController {
 
             User user = userOptional.get();
 
+            //System.out.println("Stored Password: " + bCryptPasswordEncoder.encode(loginRequest.getPassword()));
+
             if (bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return ResponseEntity.ok(new LoginResponse("token", "User logged in"));
+                return ResponseEntity.ok(new LoginResponse("token", "User logged in", user.getUserId()));
             }else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
             }        
@@ -65,14 +67,17 @@ public class AuthController {
     static class LoginResponse {
         private String token;
         private String message;
+        private Integer id;
 
-        public LoginResponse(String token, String message) {
+        public LoginResponse(String token, String message, Integer userId) {
             this.token = token;
             this.message = message;
+            this.id = userId;
         }
 
         public String getToken() {return token;}
         public String getMessage() {return message;}
+        public Integer getId(){return id;}
     }
     
 }
