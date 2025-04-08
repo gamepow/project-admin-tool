@@ -1,6 +1,6 @@
 package com.example.projectadmin.entities;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +17,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private int categoryId;
 
     @ManyToOne

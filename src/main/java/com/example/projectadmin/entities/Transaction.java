@@ -1,6 +1,7 @@
 package com.example.projectadmin.entities;
 
-import java.security.Timestamp;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,22 +25,25 @@ public class Transaction {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName= "categoryId")
+    @JoinColumn(name = "category_id", referencedColumnName= "category_id")
     private Category category;
 
-    @Column
+    @Column(name = "transaction_date", nullable = false)
+    private Date transactionDate; // Add this field
+
+    @Column(name = "amount")
     private double amount;
 
-    @Column
+    @Column(name = "currency")
     private String currency;
 
-    @Column
+    @Column(name = "transaction_description")
     private String transactionDescription;
 
-    @Column
+    @Column(name = "create_at")
     private Timestamp createDate;
 
-    @Column
+    @Column(name = "update_at")
     private Timestamp updateDate;
 
     public Transaction() {
@@ -67,6 +71,14 @@ public class Transaction {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
+    public void setTransactionDate(Date transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
     public double getAmount() {

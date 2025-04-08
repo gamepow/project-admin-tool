@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.projectadmin.entities.Category;
+import com.example.projectadmin.entities.User;
 import com.example.projectadmin.repositories.CategoryRepository;
 
 @Service
@@ -16,8 +17,8 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> findAllCategoriesByUser(Integer userId){
-        return categoryRepository.findAllCategoriesByUser(userId);
+    public List<Category> findAllCategoriesByUser(int userId){
+        return categoryRepository.findAllCategoriesByUser(new User(userId));
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.projectadmin.entities.CorsConfig;
 import com.example.projectadmin.entities.User;
+import com.example.projectadmin.security.JwtUtil;
 import com.example.projectadmin.services.UserService;
 
 @RestController
@@ -23,6 +24,9 @@ public class AuthController {
     private final SecurityFilterChain filterChain;
 
     private final CorsConfig corsConfig;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Autowired
     private UserService userService;
@@ -47,7 +51,8 @@ public class AuthController {
             //System.out.println("Stored Password: " + bCryptPasswordEncoder.encode(loginRequest.getPassword()));
 
             if (bCryptPasswordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return ResponseEntity.ok(new LoginResponse("token", "User logged in", user.getUserId()));
+                String token = jwtUtil.generateToken(user.getUsername());
+                return ResponseEntity.ok(new LoginResponse(token, "User logged in", user.getUserId()));
             }else{
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
             }        

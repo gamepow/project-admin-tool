@@ -21,7 +21,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Category>> findAllCategoriesByUser(@PathVariable Integer userId) {
+    public ResponseEntity<List<Category>> findAllCategoriesByUser(@PathVariable int userId) {
         List<Category> categories = categoryService.findAllCategoriesByUser(userId);
 
         return ResponseEntity.ok(categories);
