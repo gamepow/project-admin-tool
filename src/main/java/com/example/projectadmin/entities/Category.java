@@ -27,9 +27,6 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
-    @Column(name = "category_type")
-    private String categoryType;
-
     @Column(name = "create_date")
     private Timestamp createDate;
 
@@ -61,14 +58,6 @@ public class Category {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public String getCategoryType() {
-        return categoryType;
-    }
-
-    public void setCategoryType(String categoryType) {
-        this.categoryType = categoryType;
     }
 
     public Timestamp getCreateDate() {

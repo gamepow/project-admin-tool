@@ -9,10 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import com.example.projectadmin.entities.Category;
 import com.example.projectadmin.entities.User;
-import com.example.projectadmin.entities.UserProfile;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<UserProfile, Integer>{
+public interface CategoryRepository extends JpaRepository<Category, Integer>{
     
     //Custom query to retrieve all public categories and user-specific 
     @Query("SELECT c FROM Category c WHERE c.user = :userId OR c.user IS NULL")

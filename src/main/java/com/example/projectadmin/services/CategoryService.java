@@ -2,6 +2,7 @@ package com.example.projectadmin.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.projectadmin.entities.Category;
@@ -11,14 +12,15 @@ import com.example.projectadmin.repositories.CategoryRepository;
 @Service
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
-
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public List<Category> findAllCategoriesByUser(int userId){
         return categoryRepository.findAllCategoriesByUser(new User(userId));
+    }
+
+    public Category getCategoryById(Integer categoryId) {
+        return categoryRepository.findById(categoryId).orElse(null);
     }
 
 }

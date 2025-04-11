@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -18,12 +20,15 @@ public class User {
     private int id;
     
     @Column(name = "username", unique = true, nullable = false)
+    @Size(min = 3, max = 25, message = "Username must be between 3 and 50 characters")
     private String username;
 
-    @Column(name = "password", nullable = false) 
+    @Column(name = "password", nullable = false)
+    @Size(min = 8, max = 30, message = "Password must be at least 8 characters long")
     private String password;
 
     @Column(name = "email")
+    @Email(message = "Email should be valid")
     private String email;
 
     @Column(name = "create_date",columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

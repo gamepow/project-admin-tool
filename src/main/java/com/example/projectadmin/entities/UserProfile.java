@@ -29,7 +29,7 @@ public class UserProfile {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName= "id")
-    private User usuario;
+    private User user;
 
     public UserProfile(){
 
@@ -59,12 +59,12 @@ public class UserProfile {
         this.lastName = lastName;
     }
 
-    public User getUsuario(){
-        return this.usuario;
+    public User getUser(){
+        return this.user;
     }
 
-    public void setUsuario(User usuario){
-        this.usuario = usuario;
+    public void setUser(User user){
+        this.user = user;
     }
 
     public String getDefaultCurrency() {

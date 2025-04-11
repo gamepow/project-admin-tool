@@ -1,6 +1,7 @@
 package com.example.projectadmin.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +15,17 @@ import com.example.projectadmin.services.CategoryService;
 
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/private/category")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Category>> findAllCategoriesByUser(@PathVariable int userId) {
+    public ResponseEntity<Map<String, List<Category>>> findAllCategoriesByUser(@PathVariable int userId) {
         List<Category> categories = categoryService.findAllCategoriesByUser(userId);
-
-        return ResponseEntity.ok(categories);
+        Map<String, List<Category>> response = Map.of("data", categories);
+        return ResponseEntity.ok(response);
 
     }
     

@@ -24,8 +24,10 @@ public class UserService {
     }
 
     public Optional<UserProfile> findUserProfileByUser(User user){
-        return userProfileRepository.findByUsuario(user);
+        return userProfileRepository.findByUserId(user.getUserId());
     }
 
-
+    public Optional<User> findById(Integer id) {
+        return userRepository.findById(id);
+    }
 }

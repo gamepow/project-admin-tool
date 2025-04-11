@@ -18,7 +18,7 @@ import com.example.projectadmin.security.JwtUtil;
 import com.example.projectadmin.services.UserService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/public/auth")
 public class AuthController {
 
     private final SecurityFilterChain filterChain;
