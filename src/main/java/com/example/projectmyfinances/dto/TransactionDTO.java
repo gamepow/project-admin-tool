@@ -1,12 +1,46 @@
-package com.example.projectmyfinances.entities;
+package com.example.projectmyfinances.dto;
 
 public class TransactionDTO {
+    private Integer transactionId;
     private String transactionType;
     private Integer categoryId;
     private double amount;
     private String description;
     private String transactionDate;
     private Integer userId;
+    private String currency;
+
+    public TransactionDTO() {
+        // Default constructor
+    }
+
+    //Constructor for creating a new transaction
+    public TransactionDTO(Integer transactionId, String transactionType, Integer categoryId, double amount, String description, String transactionDate, int userId, String currency) {
+        this.transactionId = transactionId;
+        this.transactionType = transactionType;
+        this.categoryId = categoryId;
+        this.amount = amount;
+        this.description = description;
+        this.transactionDate = transactionDate;
+        this.userId = userId;
+        this.currency = currency;
+    }
+
+    public Integer getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(Integer transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 
     // Getters and setters
     public String getTransactionType() {
