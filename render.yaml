@@ -1,10 +1,8 @@
 services:
   - type: web
     name: project-myfinances-tool # Choose a name for your service on Render
-    env: java
+    dockerfilePath: Dockerfile # Specify the path to your Dockerfile
     region: oregon # Or any other preferred Render region
-    buildCommand: "./mvnw clean package -DskipTests" # Builds the JAR
-    startCommand: "java -jar target/projectmyfinances-0.0.1-SNAPSHOT.jar" # Executes the JAR
     envVars:
       - key: JWT_SECRET_KEY
         value: ${JWT_SECRET_KEY} # These will be set in Render's environment variables
