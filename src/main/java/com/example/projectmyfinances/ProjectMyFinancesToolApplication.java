@@ -21,7 +21,7 @@ public class ProjectMyFinancesToolApplication {
                 registry.addMapping("/api/**")
                     .allowedOrigins(
                         "http://localhost:3000",
-                        "https://your-frontend.github.io" // Replace with your actual GitHub Pages URL
+                        "https://gamepow.github.io" // Replace with your actual GitHub Pages URL
                     )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*");
