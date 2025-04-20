@@ -7,6 +7,11 @@ WORKDIR /app
 # Copy the Maven wrapper and .mvn directory for dependency management
 COPY .mvn ./mvn
 COPY mvnw .
+
+# Grant execute permission to mvnw
+RUN chmod +x ./mvnw
+
+# Copy the pom.xml
 COPY pom.xml .
 
 # Download dependencies (this layer will be cached if pom.xml doesn't change)
