@@ -35,6 +35,13 @@ public class UserProfile {
 
     }
 
+    public UserProfile(String defaultCurrency, String firstName, String lastName, User user) {
+        this.defaultCurrency = defaultCurrency;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.user = user;
+    }
+
     public int getId(){
         return id;
     }

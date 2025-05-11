@@ -10,4 +10,5 @@ import com.example.projectmyfinances.entities.UserProfile;
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Integer> {
     Optional<UserProfile> findByUserId(Integer userId);
+    UserProfile save(UserProfile user);
 }

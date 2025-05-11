@@ -4,6 +4,7 @@ public class TransactionDTO {
     private Integer transactionId;
     private String transactionType;
     private Integer categoryId;
+    private String categoryName;
     private double amount;
     private String description;
     private String transactionDate;
@@ -15,10 +16,11 @@ public class TransactionDTO {
     }
 
     //Constructor for creating a new transaction
-    public TransactionDTO(Integer transactionId, String transactionType, Integer categoryId, double amount, String description, String transactionDate, int userId, String currency) {
+    public TransactionDTO(Integer transactionId, String transactionType, Integer categoryId, String categoryName, double amount, String description, String transactionDate, int userId, String currency) {
         this.transactionId = transactionId;
         this.transactionType = transactionType;
         this.categoryId = categoryId;
+        this.categoryName = categoryName;
         this.amount = amount;
         this.description = description;
         this.transactionDate = transactionDate;
@@ -89,5 +91,13 @@ public class TransactionDTO {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

@@ -36,6 +36,7 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests()
             .requestMatchers("/api/public/**").permitAll() // Allow public access to authentication endpoints
+            .requestMatchers("/api/user/public/**").permitAll() // Allow public access to authentication endpoints
             .anyRequest().authenticated()
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

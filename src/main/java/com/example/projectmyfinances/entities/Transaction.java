@@ -42,10 +42,6 @@ public class Transaction {
     @DecimalMax("999999999.0") @DecimalMin("0.0")
     private double amount;
 
-    @Column(name = "currency")
-    @Size(min = 3, max = 3, message = "Currency code must be 3 characters long")
-    private String currency;
-
     @Column(name = "transaction_description")
     @Size(max = 255, message = "Description cannot exceed 255 characters")
     private String transactionDescription;
@@ -99,14 +95,6 @@ public class Transaction {
 
     public void setAmount(double amount) {
         this.amount = amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public String getTransactionDescription() {

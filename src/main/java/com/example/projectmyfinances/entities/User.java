@@ -24,7 +24,7 @@ public class User {
     private String username;
 
     @Column(name = "password", nullable = false)
-    @Size(min = 8, max = 30, message = "Password must be at least 8 characters long")
+    @Size(min = 6, max = 255, message = "Password must be at least 8 characters long")
     private String password;
 
     @Column(name = "email")
