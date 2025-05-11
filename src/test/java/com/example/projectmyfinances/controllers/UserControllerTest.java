@@ -3,6 +3,8 @@ package com.example.projectmyfinances.controllers;
 import com.example.projectmyfinances.entities.User;
 import com.example.projectmyfinances.entities.UserProfile;
 import com.example.projectmyfinances.services.UserService;
+import com.example.projectmyfinances.services.UserServiceImpl;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -25,7 +28,10 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private UserServiceImpl userService;
+
+    @MockBean
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // Add these inside your test class
     @MockBean
@@ -41,7 +47,7 @@ class UserControllerTest {
         user.setUsername("test");
         Mockito.when(userService.findByUsername("test")).thenReturn(Optional.of(user));
 
-        mockMvc.perform(get("/api/user/test"))
+        mockMvc.perform(get("/api/user/private/test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("test"));
     }
@@ -50,7 +56,7 @@ class UserControllerTest {
     void getUserByUserName_notFound() throws Exception {
         Mockito.when(userService.findByUsername("jane")).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/user/jane"))
+        mockMvc.perform(get("/api/user/private/jane"))
                 .andExpect(status().isNotFound());
     }
 
@@ -61,7 +67,7 @@ class UserControllerTest {
         Mockito.when(userService.findUserProfileByUser(Mockito.any(User.class)))
                 .thenReturn(Optional.of(profile));
 
-        mockMvc.perform(get("/api/user/1/profile"))
+        mockMvc.perform(get("/api/user/private/1/profile"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }
@@ -71,7 +77,7 @@ class UserControllerTest {
         Mockito.when(userService.findUserProfileByUser(Mockito.any(User.class)))
                 .thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/api/user/2/profile"))
+        mockMvc.perform(get("/api/user/private/2/profile"))
                 .andExpect(status().isNotFound());
     }
 }
