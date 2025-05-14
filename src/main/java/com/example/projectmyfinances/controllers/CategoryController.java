@@ -1,7 +1,6 @@
 package com.example.projectmyfinances.controllers;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +21,9 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Map<String, List<Category>>> findAllCategoriesByUser(@PathVariable int userId) {
+    public ResponseEntity<?> findAllCategoriesByUser(@PathVariable int userId) {
         List<Category> categories = categoryService.findAllCategoriesByUser(userId);
-        Map<String, List<Category>> response = Map.of("data", categories);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(categories);
 
     }
     

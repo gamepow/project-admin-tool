@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.projectmyfinances.dto.UserDTO;
+import com.example.projectmyfinances.dto.UserProfileDTO;
 import com.example.projectmyfinances.entities.User;
-import com.example.projectmyfinances.entities.UserProfile;
 import com.example.projectmyfinances.services.UserServiceImpl;
 
 
@@ -46,15 +46,42 @@ public class UserController {
         }
     }
 
-    @GetMapping("/private/{id}/profile")
-    public ResponseEntity<UserProfile> getUserProfileByUser(@PathVariable int id){
-        Optional<UserProfile> userProfile = userService.findUserProfileByUser(new User(id));
-        if(userProfile.isPresent()){
-            return ResponseEntity.ok(userProfile.get());
-        }else{
-            return ResponseEntity.notFound().build();
+    @GetMapping("/private/profile/{id}")
+    public ResponseEntity<?> getUserProfileByUser(@PathVariable int id){
+        try {
+            UserProfileDTO userProfile = userService.findUserProfileByUser(new User(id));
+
+            // 2. return the list of transactions as a JSON response
+            if(userProfile.getUsername() != null){
+                logger.info("User profile found: {}", userProfile);
+                return ResponseEntity.ok(userProfile);
+            }else{
+                return ResponseEntity.notFound().build();
+            }    
+
+        } catch (Exception e) {
+            logger.error("Error retrieving user profile: {}", e.getMessage());
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "User profile not found.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
+
+    @PostMapping("/private/profile/{id}")
+    public ResponseEntity<?> updateUserProfule(@RequestBody UserProfileDTO userProfileDTO, @PathVariable int id) {
+        try{
+            userService.updateUserProfile(userProfileDTO, id);
+
+            return ResponseEntity.ok("User profile updated successfully"); // <-- return JSON
+
+        }catch(Exception ex){
+            logger.error("Error updating user profile: {}", ex.getMessage());
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "User profile not found.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
+    
 
     @PostMapping("/public/newuser")
     public ResponseEntity<?> saveNewuser(@RequestBody UserDTO userDTO) {

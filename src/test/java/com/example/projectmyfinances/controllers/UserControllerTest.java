@@ -1,5 +1,6 @@
 package com.example.projectmyfinances.controllers;
 
+import com.example.projectmyfinances.dto.UserProfileDTO;
 import com.example.projectmyfinances.entities.User;
 import com.example.projectmyfinances.entities.UserProfile;
 import com.example.projectmyfinances.services.UserService;
@@ -62,10 +63,10 @@ class UserControllerTest {
 
     @Test
     void getUserProfileByUser_found() throws Exception {
-        UserProfile profile = new UserProfile();
+        UserProfileDTO profile = new UserProfileDTO();
         profile.setId(1);
         Mockito.when(userService.findUserProfileByUser(Mockito.any(User.class)))
-                .thenReturn(Optional.of(profile));
+                .thenReturn(profile);
 
         mockMvc.perform(get("/api/user/private/1/profile"))
                 .andExpect(status().isOk())
@@ -75,7 +76,7 @@ class UserControllerTest {
     @Test
     void getUserProfileByUser_notFound() throws Exception {
         Mockito.when(userService.findUserProfileByUser(Mockito.any(User.class)))
-                .thenReturn(Optional.empty());
+                .thenReturn(null);
 
         mockMvc.perform(get("/api/user/private/2/profile"))
                 .andExpect(status().isNotFound());

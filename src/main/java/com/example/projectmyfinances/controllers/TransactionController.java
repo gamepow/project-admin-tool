@@ -30,12 +30,7 @@ public class TransactionController {
         try{
             Transaction createdTransaction = transactionService.createTransaction(transactionDTO);
 
-            // Return a JSON object with the transaction ID and a message
-            Map<String, Object> response = new HashMap<>();
-            response.put("transactionId", createdTransaction.getTransactionId());
-            response.put("message", "Transaction created successfully");
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(createdTransaction);
         }
         catch(Exception ex){;
             Map<String, Object> error = new HashMap<>();
