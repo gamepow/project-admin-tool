@@ -65,10 +65,11 @@ class UserControllerTest {
     void getUserProfileByUser_found() throws Exception {
         UserProfileDTO profile = new UserProfileDTO();
         profile.setId(1);
+        profile.setUsername("test"); // <-- Add this line
         Mockito.when(userService.findUserProfileByUser(Mockito.any(User.class)))
                 .thenReturn(profile);
 
-        mockMvc.perform(get("/api/user/private/1/profile"))
+        mockMvc.perform(get("/api/user/private/profile/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }
@@ -78,7 +79,7 @@ class UserControllerTest {
         Mockito.when(userService.findUserProfileByUser(Mockito.any(User.class)))
                 .thenReturn(null);
 
-        mockMvc.perform(get("/api/user/private/2/profile"))
+        mockMvc.perform(get("/api/user/private/profile/1"))
                 .andExpect(status().isNotFound());
     }
 }

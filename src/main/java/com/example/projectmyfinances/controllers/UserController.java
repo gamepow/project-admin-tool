@@ -50,6 +50,9 @@ public class UserController {
     public ResponseEntity<?> getUserProfileByUser(@PathVariable int id){
         try {
             UserProfileDTO userProfile = userService.findUserProfileByUser(new User(id));
+            if (userProfile == null) {
+                return ResponseEntity.notFound().build();
+            }
 
             // 2. return the list of transactions as a JSON response
             if(userProfile.getUsername() != null){
