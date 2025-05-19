@@ -47,10 +47,10 @@ public class TransactionController {
             // 1. Retrieve user's transactions from service
             List<TransactionDTO> transactions = transactionService.getTransactionsByUserId(userId);
 
-            // 2. return the list of transactions as a JSON response
+            /*// 2. return the list of transactions as a JSON response
             Map<String, Object> response = new HashMap<>();
-            response.put("data", transactions);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response.put("data", transactions);*/
+            return ResponseEntity.ok(transactions);
         }
         catch(Exception ex){
             System.out.println("Error retrieving transactions: " + ex.getMessage());
