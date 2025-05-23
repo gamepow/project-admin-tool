@@ -136,5 +136,39 @@ public class TransactionServiceImpl implements TransactionService {
             return map;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteTransaction(int transactionId) {
+        transactionRepository.deleteById(transactionId);
+    }
     
+    @Override
+    public List<TransactionDTO> getTransactionsByDateRange(int userId, String startDate, String endDate) {
+        Date sqlStartDate = parseStringToSqlDate(startDate, "yyyy-MM-dd");
+        Date sqlEndDate = parseStringToSqlDate(endDate, "yyyy-MM-dd");
+
+        List<Object[]> results = transactionRepository.findByUserIdAndDateRange(userId, sqlStartDate, sqlEndDate);
+
+        return results.stream().map(row -> new TransactionDTO(
+            (Integer) row[0], // transactionId
+            (String) row[1],  // transactionType
+            (Integer) row[2], // categoryId
+            (String) row[3],  // categoryName
+            row[4] != null ? ((Number) row[4]).doubleValue() : 0.0, // amount as double
+            (String) row[5],  // description
+            row[6] != null ? row[6].toString() : null, // transactionDate as String
+            (Integer) row[7], // userId
+            (String) row[8]   // currency
+        )).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Map<String, Object>> getMonthlyExpensesSummary(int userId, int year, int month) {
+        return transactionRepository.getTransactionSummaryByTypeAndMonth(userId, "expense", year, month);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMonthlyIncomeSummary(int userId, int year, int month) {
+        return transactionRepository.getTransactionSummaryByTypeAndMonth(userId, "income", year, month);
+    }
 }

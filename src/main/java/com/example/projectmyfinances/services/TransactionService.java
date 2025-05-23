@@ -12,5 +12,9 @@ public interface TransactionService {
     List<TransactionDTO> getTransactionsByUserId(int userId);
     List<Map<String, Object>> getTransactionExpensesSummaryByUser(int userId);
     List<Map<String, Object>> getTransactionIncomeSummaryByUser(int userId);
+    void deleteTransaction(int transactionId);
+    List<TransactionDTO> getTransactionsByDateRange(int userId, String startDate, String endDate);
+    List<Map<String, Object>> getMonthlyExpensesSummary(int userId, int year, int month);
+    List<Map<String, Object>> getMonthlyIncomeSummary(int userId, int year, int month);
 
 }
