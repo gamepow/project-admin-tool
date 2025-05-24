@@ -17,4 +17,13 @@ public interface UserService {
     public User saveUser(UserDTO userDTO) throws Exception;
 
     public void updateUserProfile(UserProfileDTO userProfileDTO, int id) throws Exception;
+    
+    /**
+     * Changes the password of a user.
+     * @param userId The ID of the user.
+     * @param currentPassword The current password of the user.
+     * @param newPassword The new password to set.
+     * @throws Exception If the current password is incorrect or any other error occurs.
+     */
+    void changePassword(int userId, String currentPassword, String newPassword) throws Exception;
 }

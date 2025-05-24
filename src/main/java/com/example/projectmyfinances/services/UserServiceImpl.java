@@ -3,6 +3,10 @@ package com.example.projectmyfinances.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.projectmyfinances.dto.UserDTO;
@@ -13,7 +17,7 @@ import com.example.projectmyfinances.repositories.UserProfileRepository;
 import com.example.projectmyfinances.repositories.UserRepository;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
@@ -21,12 +25,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserProfileRepository userProfileRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     String DEFAULT_CURRENCY = "CRC";
 
+    @Override
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    @Override
     public UserProfileDTO findUserProfileByUser(User user){
         
         // 1. Retrieve user's profile from repository
@@ -48,10 +57,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
     public Optional<User> findById(Integer id) {
         return userRepository.findById(id);
     }
 
+    @Override
     public User saveUser(UserDTO userDTO) throws Exception{
 
         Optional<User> optionalUser = userRepository.findByUsername(userDTO.getUsername());
@@ -77,6 +88,7 @@ public class UserServiceImpl implements UserService {
         return newUser;
     }
 
+    @Override
     public void updateUserProfile(UserProfileDTO userProfileDTO, int id) throws Exception {
         Optional<UserProfile> optionalUserProfile = userProfileRepository.findByUserId(id);
 
@@ -92,4 +104,41 @@ public class UserServiceImpl implements UserService {
         userProfileRepository.save(userProfile);
     }
 
+    @Override
+    public void changePassword(int userId, String currentPassword, String newPassword) throws Exception {
+        // Fetch the user by ID
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (!optionalUser.isPresent()) {
+            throw new Exception("User not found.");
+        }
+
+        User user = optionalUser.get();
+
+        // Validate the current password
+        if (!bCryptPasswordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new Exception("Current password is incorrect.");
+        }
+
+        // Hash the new password
+        String hashedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+
+        // Update the user's password
+        user.setPassword(hashedNewPassword);
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (!userOptional.isPresent()) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+
+        User user = userOptional.get();
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities("USER") // You can customize roles/authorities here
+                .build();
+    }
 }

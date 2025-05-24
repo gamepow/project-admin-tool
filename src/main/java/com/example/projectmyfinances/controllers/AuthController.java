@@ -16,6 +16,7 @@ import com.example.projectmyfinances.entities.CorsConfig;
 import com.example.projectmyfinances.entities.User;
 import com.example.projectmyfinances.security.JwtUtil;
 import com.example.projectmyfinances.services.UserService;
+import com.example.projectmyfinances.services.UserServiceImpl;
 
 @RestController
 @RequestMapping("/api/public/auth")
@@ -29,7 +30,7 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;

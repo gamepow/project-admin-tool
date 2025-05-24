@@ -115,6 +115,23 @@ public class UserController {
         }
     }
     
-    
-    
+    @PostMapping("/private/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordData) {
+        try {
+            int userId = Integer.parseInt(passwordData.get("userId"));
+            String currentPassword = passwordData.get("currentPassword");
+            String newPassword = passwordData.get("newPassword");
+
+            userService.changePassword(userId, currentPassword, newPassword);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Password changed successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            System.out.println("Error changing password: " + ex.getMessage());
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+    }
 }
