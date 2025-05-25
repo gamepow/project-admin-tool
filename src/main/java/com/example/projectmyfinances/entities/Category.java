@@ -33,6 +33,9 @@ public class Category {
     @Column(name = "update_date")
     private Timestamp updateDate;
 
+    @Column(name = "category_type", nullable = false)
+    private String categoryType;
+
     public Category() {
     }
 
@@ -74,6 +77,14 @@ public class Category {
 
     public void setUpdateDate(Timestamp updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public String getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(String categoryType) {
+        this.categoryType = categoryType;
     }
 
     
