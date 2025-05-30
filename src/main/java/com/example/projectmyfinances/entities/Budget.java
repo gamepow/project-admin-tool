@@ -1,7 +1,6 @@
 package com.example.projectmyfinances.entities;
 
-import java.security.Timestamp;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,25 +17,25 @@ public class Budget {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int budgetId;
-
-    @ManyToOne
+    @Column(name = "budget_id")
+    private int budgetId;    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName= "id")
     private User user;
 
-    @Column
-    private Date startDate;
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+    private Category category;
 
-    @Column
+    @Column(name = "budget_amount")
     private double budgetAmount;
 
     @Column
     private String currency;
 
-    @Column
+    @Column(name = "create_date")
     private Timestamp createDate;
 
-    @Column
+    @Column(name = "update_date")
     private Timestamp updateDate;
 
     public Budget() {
@@ -52,18 +51,16 @@ public class Budget {
 
     public User getUser() {
         return user;
-    }
-
-    public void setUser(User user) {
+    }    public void setUser(User user) {
         this.user = user;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public double getBudgetAmount() {

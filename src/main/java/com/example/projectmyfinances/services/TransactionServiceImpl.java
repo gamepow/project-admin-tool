@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.projectmyfinances.dto.TransactionDTO;
+import com.example.projectmyfinances.entities.Account;
 import com.example.projectmyfinances.entities.Category;
 import com.example.projectmyfinances.entities.Transaction;
 import com.example.projectmyfinances.entities.User;
@@ -26,36 +27,30 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    CategoryService categoryService;
+    private CategoryService categoryService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+    @Autowired
+    private AccountService accountService;
 
     public static Date parseStringToSqlDate(String dateString, String pattern) {
         try {
-            // 1. Create a DateTimeFormatter based on the expected pattern
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-
-            // 2. Parse the string into a LocalDate
             LocalDate localDate = LocalDate.parse(dateString, formatter);
-
-            // 3. Convert the LocalDate to a java.sql.Date
             return Date.valueOf(localDate);
-
         } catch (DateTimeParseException e) {
-            System.err.println("Error parsing date string: " + dateString + " with pattern: " + pattern);
-            e.printStackTrace();
-            return null; // Or throw an exception
+            throw new RuntimeException("Invalid date format", e);
         }
     }
 
     @Override
     public Transaction createTransaction(TransactionDTO transactionDTO) throws Exception {
-
         // Set the creation and update timestamps
         // 1. Fetch the Category object from the database
         Category category = categoryService.getCategoryById(transactionDTO.getCategoryId());
-
+        Account account = accountService.getAccountById(transactionDTO.getAccountId());
         Optional<User> optionalUser = userService.findById(transactionDTO.getUserId());
 
         if (!optionalUser.isPresent()) {
@@ -64,6 +59,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         if (category == null) {
             throw new Exception("Category not found");
+        }
+
+        if (account == null) {
+            throw new Exception("Account not found");
         }
 
         User usuario = optionalUser.get();
@@ -75,10 +74,20 @@ public class TransactionServiceImpl implements TransactionService {
         Transaction transaction = new Transaction();
         transaction.setTransactionType(transactionDTO.getTransactionType());
         transaction.setCategory(category);
+        transaction.setAccount(account);
         transaction.setAmount(transactionDTO.getAmount());
         transaction.setTransactionDescription(transactionDTO.getDescription());
         transaction.setTransactionDate(sqlDate1);
         transaction.setUser(usuario);
+
+        // Update account balance
+        double newBalance = account.getCurrentBalance();
+        if (transactionDTO.getTransactionType().equals("income")) {
+            newBalance += transactionDTO.getAmount();
+        } else {
+            newBalance -= transactionDTO.getAmount();
+        }
+        accountService.updateAccountBalance(account.getAccountId(), newBalance);
 
         return transactionRepository.save(transaction);
     }
@@ -96,23 +105,32 @@ public class TransactionServiceImpl implements TransactionService {
             (String) row[5],  // description
             row[6] != null ? row[6].toString() : null, // transactionDate as String
             (Integer) row[7], // userId
-            (String) row[8]   // currency
+            (String) row[8],  // currency
+            (Integer) row[9], // accountId
+            (String) row[10]  // accountName
         )).collect(Collectors.toList());
 
         return dtos;
-        
     }
 
-    private TransactionDTO convertToDTO(Transaction transaction) {
-        TransactionDTO dto = new TransactionDTO();
-        dto.setTransactionId(transaction.getTransactionId());
-        dto.setTransactionType(transaction.getTransactionType());
-        dto.setCategoryId(transaction.getCategory().getCategoryId());
-        dto.setAmount(transaction.getAmount());
-        dto.setDescription(transaction.getTransactionDescription());
-        dto.setTransactionDate(transaction.getTransactionDate().toString());
-        dto.setUserId(transaction.getUser().getUserId());
-        return dto;
+    @Override
+    public void deleteTransaction(int transactionId) {
+        Optional<Transaction> transactionOpt = transactionRepository.findById(transactionId);
+        if (transactionOpt.isPresent()) {
+            Transaction transaction = transactionOpt.get();
+            Account account = transaction.getAccount();
+            
+            // Revert the account balance
+            double newBalance = account.getCurrentBalance();
+            if (transaction.getTransactionType().equals("income")) {
+                newBalance -= transaction.getAmount();
+            } else {
+                newBalance += transaction.getAmount();
+            }
+            accountService.updateAccountBalance(account.getAccountId(), newBalance);
+            
+            transactionRepository.deleteById(transactionId);
+        }
     }
 
     @Override
@@ -138,28 +156,31 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void deleteTransaction(int transactionId) {
-        transactionRepository.deleteById(transactionId);
-    }
-    
-    @Override
     public List<TransactionDTO> getTransactionsByDateRange(int userId, String startDate, String endDate) {
-        Date sqlStartDate = parseStringToSqlDate(startDate, "yyyy-MM-dd");
-        Date sqlEndDate = parseStringToSqlDate(endDate, "yyyy-MM-dd");
+        try {
+            Date sqlStartDate = parseStringToSqlDate(startDate, "yyyy-MM-dd");
+            Date sqlEndDate = parseStringToSqlDate(endDate, "yyyy-MM-dd");
+            
+            List<Object[]> results = transactionRepository.findByUserIdAndDateRange(userId, sqlStartDate, sqlEndDate);
+            
+            List<TransactionDTO> dtos = results.stream().map(row -> new TransactionDTO(
+                (Integer) row[0], // transactionId
+                (String) row[1],  // transactionType
+                (Integer) row[2], // categoryId
+                (String) row[3],  // categoryName
+                row[4] != null ? ((Number) row[4]).doubleValue() : 0.0, // amount as double
+                (String) row[5],  // description
+                row[6] != null ? row[6].toString() : null, // transactionDate as String
+                (Integer) row[7], // userId
+                (String) row[8],  // currency
+                (Integer) row[9], // accountId
+                (String) row[10]  // accountName
+            )).collect(Collectors.toList());
 
-        List<Object[]> results = transactionRepository.findByUserIdAndDateRange(userId, sqlStartDate, sqlEndDate);
-
-        return results.stream().map(row -> new TransactionDTO(
-            (Integer) row[0], // transactionId
-            (String) row[1],  // transactionType
-            (Integer) row[2], // categoryId
-            (String) row[3],  // categoryName
-            row[4] != null ? ((Number) row[4]).doubleValue() : 0.0, // amount as double
-            (String) row[5],  // description
-            row[6] != null ? row[6].toString() : null, // transactionDate as String
-            (Integer) row[7], // userId
-            (String) row[8]   // currency
-        )).collect(Collectors.toList());
+            return dtos;
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving transactions by date range", e);
+        }
     }
 
     @Override
@@ -170,5 +191,21 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Map<String, Object>> getMonthlyIncomeSummary(int userId, int year, int month) {
         return transactionRepository.getTransactionSummaryByTypeAndMonth(userId, "income", year, month);
+    }
+
+    private TransactionDTO convertToDTO(Transaction transaction) {
+        TransactionDTO dto = new TransactionDTO();
+        dto.setTransactionId(transaction.getTransactionId());
+        dto.setTransactionType(transaction.getTransactionType());
+        dto.setCategoryId(transaction.getCategory().getCategoryId());
+        dto.setCategoryName(transaction.getCategory().getCategoryName());
+        dto.setAccountId(transaction.getAccount().getAccountId());
+        dto.setAccountName(transaction.getAccount().getAccountName());
+        dto.setAmount(transaction.getAmount());
+        dto.setDescription(transaction.getTransactionDescription());
+        dto.setTransactionDate(transaction.getTransactionDate().toString());
+        dto.setUserId(transaction.getUser().getUserId());
+        dto.setCurrency(transaction.getAccount().getCurrency());
+        return dto;
     }
 }

@@ -29,6 +29,10 @@ public class Transaction {
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "account_id", referencedColumnName= "account_id")
+    private Account account;
+
+    @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName= "category_id")
     private Category category;
 
@@ -71,6 +75,14 @@ public class Transaction {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public Category getCategory() {

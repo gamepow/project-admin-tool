@@ -5,7 +5,9 @@ public class TransactionDTO {
     private String transactionType;
     private Integer categoryId;
     private String categoryName;
-    private double amount;
+    private Integer accountId;
+    private String accountName;
+    private Double amount;
     private String description;
     private String transactionDate;
     private Integer userId;
@@ -16,11 +18,13 @@ public class TransactionDTO {
     }
 
     //Constructor for creating a new transaction
-    public TransactionDTO(Integer transactionId, String transactionType, Integer categoryId, String categoryName, double amount, String description, String transactionDate, int userId, String currency) {
+    public TransactionDTO(Integer transactionId, String transactionType, Integer categoryId, String categoryName, Double amount, String description, String transactionDate, Integer userId, String currency, Integer accountId, String accountName) {
         this.transactionId = transactionId;
         this.transactionType = transactionType;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
+        this.accountId = accountId;
+        this.accountName = accountName;
         this.amount = amount;
         this.description = description;
         this.transactionDate = transactionDate;
@@ -36,15 +40,6 @@ public class TransactionDTO {
         this.transactionId = transactionId;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    // Getters and setters
     public String getTransactionType() {
         return transactionType;
     }
@@ -61,11 +56,35 @@ public class TransactionDTO {
         this.categoryId = categoryId;
     }
 
-    public double getAmount() {
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Integer getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -93,11 +112,11 @@ public class TransactionDTO {
         this.userId = userId;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

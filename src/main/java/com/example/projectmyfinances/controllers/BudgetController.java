@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.projectmyfinances.dto.BudgetDTO;
 import com.example.projectmyfinances.entities.Budget;
-import com.example.projectmyfinances.services.BudgetService;
+import com.example.projectmyfinances.services.BudgetServiceImpl;
 
 @RestController
 @RequestMapping("/api/private/budget")
 public class BudgetController {
 
     @Autowired
-    private BudgetService budgetService;
+    private BudgetServiceImpl budgetService;
 
     @GetMapping("/{userId}")
     public ResponseEntity<?> findAllBudgetsByUser(@PathVariable int userId) {
@@ -33,7 +34,7 @@ public class BudgetController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addBudget(@RequestBody Budget budget) {
+    public ResponseEntity<?> addBudget(@RequestBody BudgetDTO budget) {
         try {
             Budget newBudget = budgetService.addBudget(budget);
             return ResponseEntity.ok(newBudget);
